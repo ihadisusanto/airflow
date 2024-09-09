@@ -68,14 +68,14 @@ def etl_data ():
     
     
     #Write transformed data to destination PostgreSQL table
-    tuples = [tuple(x) for x in df.to_numpy()]
-    cols = ','.join(list(df.columns))
-    query = "INSERT INTO AggregationTransformation (%s) VALUES %%s" % (cols)
-    cursor = vercel_conn.cursor()
-    cursor.executemany(query, tuples)
-    vercel_conn.commit()
-    cursor.close()
-    # df.to_sql('AggregationTransformation', con=PostgresHook(postgres_conn_id='vercel-postgres').get_conn(), index=False, if_exists='append')
+    # tuples = [tuple(x) for x in df.to_numpy()]
+    # cols = ','.join(list(df.columns))
+    # query = "INSERT INTO AggregationTransformation (%s) VALUES %%s" % (cols)
+    # cursor = vercel_conn.cursor()
+    # cursor.executemany(query, tuples)
+    # vercel_conn.commit()
+    # cursor.close()
+    df.to_sql('AggregationTransformation', con=vercel_conn, index=False, if_exists='append')
 
 with dag:
     etl_task = PythonOperator(
