@@ -21,28 +21,28 @@ dag = DAG(
 )
 
 create_destination_table = """
-CREATE TABLE IF NOT EXISTS AggregationTransformation(
-    EnglishCountryRegionName varchar(50),
-    StateProvinceName varchar(50),
-    City varchar(50),
-    UnitPrice money,
-    ProductStandardCost money,
-    TotalProductCost money,
-    SalesAmount money,
-    TaxAmt money
+CREATE TABLE IF NOT EXISTS aggregation_transformation(
+    english_country_region_name varchar(50),
+    state_province_name varchar(50),
+    city varchar(50),
+    unit_price money,
+    product_standard_cost money,
+    total_product_cost money,
+    sales_amount money,
+    tax_amt money
 )
 """
 
 query_transformation = """
     SELECT 
-        EnglishCountryRegionName,
-        StateProvinceName,
-        City,
-        SUM(Reseller.UnitPrice) as UnitPrice,
-        SUM(Reseller.ProductStandardCost) as ProductStandardCost,
-        MIN(Reseller.TotalProductCost) as TotalProductCost,
-        MAX(Reseller.SalesAmount) as SalesAmount,
-        AVG(Reseller.TaxAmt) as TaxAmt
+        EnglishCountryRegionName as english_country_region_name,
+        StateProvinceName as state_province_name,
+        City as city,
+        SUM(Reseller.UnitPrice) as unit_price,
+        SUM(Reseller.ProductStandardCost) as product_standard_cost,
+        MIN(Reseller.TotalProductCost) as total_product_cost,
+        MAX(Reseller.SalesAmount) as sales_amount,
+        AVG(Reseller.TaxAmt) as tax_amt
     FROM DimGeography
     INNER JOIN FactResellerSales AS Reseller ON DimGeography.SalesTerritoryKey = Reseller.SalesTerritoryKey
     GROUP BY EnglishCountryRegionName, StateProvinceName, City
@@ -67,14 +67,14 @@ def etl_data ():
     df = pd.read_sql_query(query_transformation, mssql_conn)
     
     #transform data
-    df['EnglishCountryRegionName'] = df['EnglishCountryRegionName'].astype(str)
-    df['StateProvinceName'] = df['StateProvinceName'].astype(str)
-    df['City'] = df['City'].astype(str)
-    df['UnitPrice'] = df['UnitPrice'].astype(float)
-    df['ProductStandardCost'] = df['ProductStandardCost'].astype(float)
-    df['TotalProductCost'] = df['TotalProductCost'].astype(float)
-    df['SalesAmount'] = df['SalesAmount'].astype(float)
-    df['TaxAmt'] = df['TaxAmt'].astype(float)
+    # df['EnglishCountryRegionName'] = df['EnglishCountryRegionName'].astype(str)
+    # df['StateProvinceName'] = df['StateProvinceName'].astype(str)
+    # df['City'] = df['City'].astype(str)
+    # df['UnitPrice'] = df['UnitPrice'].astype(float)
+    # df['ProductStandardCost'] = df['ProductStandardCost'].astype(float)
+    # df['TotalProductCost'] = df['TotalProductCost'].astype(float)
+    # df['SalesAmount'] = df['SalesAmount'].astype(float)
+    # df['TaxAmt'] = df['TaxAmt'].astype(float)
 
     #Write transformed data to destination PostgreSQL table
     # df.to_csv('/opt/bitnami/airflow/dags/transform1.csv',index=False)
@@ -83,7 +83,7 @@ def etl_data ():
     cols = df.columns.tolist()
     
     # Dynamically construct SQL query using psycopg2's sql module
-    query = sql.SQL("INSERT INTO AggregationTransformation ({}) VALUES ({})").format(
+    query = sql.SQL("INSERT INTO aggregation_transformation ({}) VALUES ({})").format(
         sql.SQL(', ').join(map(sql.Identifier, cols)),
         sql.SQL(', ').join(sql.Placeholder() * len(cols))
     )
