@@ -72,13 +72,14 @@ def etl_data ():
     df['City'] = df['City'].astype(str)
     
     #Write transformed data to destination PostgreSQL table
-    tuples = [tuple(x) for x in df.to_numpy()]
-    cols = ','.join(list(df.columns))
-    query = "INSERT INTO AggregationTransformation (%s) VALUES %%s" % (cols)
-    cursor = vercel_conn.cursor()
-    cursor.executemany(query, tuples)
-    vercel_conn.commit()
-    cursor.close()
+    df.to_csv('/opt/bitnami/airflow/dags/transform1.csv',index=False)
+    # tuples = [tuple(x) for x in df.to_numpy()]
+    # cols = ','.join(list(df.columns))
+    # query = "INSERT INTO AggregationTransformation (%s) VALUES %%s" % (cols)
+    # cursor = vercel_conn.cursor()
+    # cursor.executemany(query, tuples)
+    # vercel_conn.commit()
+    # cursor.close()
     # df.to_sql('AggregationTransformation', con=vercel_conn, index=False, if_exists='append')
 
 with dag:
