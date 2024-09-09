@@ -44,13 +44,17 @@ def load_data_to_gsheet():
     df = extract_from_mssql()
     #Specify the spreadsheet ID and range
     sheet_id = '1IwXEaoUR5OdXc4z2lyBjr0xUYrLDZHb6uDYibgXsSto'
-    sheet_range = 'Sheet1!A1'
+    sheet_range = 'Sheet2!A1'
+
+
+    #Update the data include the column name
+    values = [df.columns.tolist()] + df.values.tolist()
 
     #Update the spreadsheet with data
     sheet_hook.update_values(
         sheet_id,
         sheet_range,
-        df.values.tolist(),
+        values,
         value_input_option='RAW'
     )
 

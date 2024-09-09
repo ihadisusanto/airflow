@@ -65,16 +65,6 @@ def etl_data ():
 
     #Query data from source MS SQL Server
     df = pd.read_sql_query(query_transformation, mssql_conn)
-    
-    #transform data
-    # df['EnglishCountryRegionName'] = df['EnglishCountryRegionName'].astype(str)
-    # df['StateProvinceName'] = df['StateProvinceName'].astype(str)
-    # df['City'] = df['City'].astype(str)
-    # df['UnitPrice'] = df['UnitPrice'].astype(float)
-    # df['ProductStandardCost'] = df['ProductStandardCost'].astype(float)
-    # df['TotalProductCost'] = df['TotalProductCost'].astype(float)
-    # df['SalesAmount'] = df['SalesAmount'].astype(float)
-    # df['TaxAmt'] = df['TaxAmt'].astype(float)
 
     #Write transformed data to destination PostgreSQL table
     # df.to_csv('/opt/bitnami/airflow/dags/transform1.csv',index=False)
