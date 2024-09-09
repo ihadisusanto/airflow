@@ -70,16 +70,21 @@ def etl_data ():
     df['EnglishCountryRegionName'] = df['EnglishCountryRegionName'].astype(str)
     df['StateProvinceName'] = df['StateProvinceName'].astype(str)
     df['City'] = df['City'].astype(str)
+    df['UnitPrice'] = df['UnitPrice'].astype(float)
+    df['ProductStandardCost'] = df['ProductStandardCost'].astype(float)
+    df['TotalProductCost'] = df['TotalProductCost'].astype(float)
+    df['SalesAmount'] = df['SalesAmount'].astype(float)
+    df['TaxAmt'] = df['TaxAmt'].astype(float)
     
     #Write transformed data to destination PostgreSQL table
-    df.to_csv('/opt/bitnami/airflow/dags/transform1.csv',index=False)
-    # tuples = [tuple(x) for x in df.to_numpy()]
-    # cols = ','.join(list(df.columns))
-    # query = "INSERT INTO AggregationTransformation (%s) VALUES %%s" % (cols)
-    # cursor = vercel_conn.cursor()
-    # cursor.executemany(query, tuples)
-    # vercel_conn.commit()
-    # cursor.close()
+    # df.to_csv('/opt/bitnami/airflow/dags/transform1.csv',index=False)
+    tuples = [tuple(x) for x in df.to_numpy()]
+    cols = ','.join(list(df.columns))
+    query = "INSERT INTO AggregationTransformation (%s) VALUES %%s" % (cols)
+    cursor = vercel_conn.cursor()
+    cursor.executemany(query, tuples)
+    vercel_conn.commit()
+    cursor.close()
     # df.to_sql('AggregationTransformation', con=vercel_conn, index=False, if_exists='append')
 
 with dag:
