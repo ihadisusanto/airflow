@@ -40,7 +40,7 @@ def extract_from_mssql():
     return df
 
 def load_data_to_gsheet():
-    sheet_hook = GSheetsHook(gcp_conn_id='google_spreadsheet')
+    sheet_hook = GSheetsHook(gcp_conn_id='google_cloud_default')
     df = extract_from_mssql()
     #Specify the spreadsheet ID and range
     sheet_id = '1IwXEaoUR5OdXc4z2lyBjr0xUYrLDZHb6uDYibgXsSto'
