@@ -66,16 +66,20 @@ def etl_data ():
     #Query data from source MS SQL Server
     df = pd.read_sql_query(query_transformation, mssql_conn)
     
+    #transform data
+    df['EnglishCountryRegionName'] = df['EnglishCountryRegionName'].astype(str)
+    df['StateProvinceName'] = df['StateProvinceName'].astype(str)
+    df['City'] = df['City'].astype(str)
     
     #Write transformed data to destination PostgreSQL table
-    # tuples = [tuple(x) for x in df.to_numpy()]
-    # cols = ','.join(list(df.columns))
-    # query = "INSERT INTO AggregationTransformation (%s) VALUES %%s" % (cols)
-    # cursor = vercel_conn.cursor()
-    # cursor.executemany(query, tuples)
-    # vercel_conn.commit()
-    # cursor.close()
-    df.to_sql('AggregationTransformation', con=vercel_conn, index=False, if_exists='append')
+    tuples = [tuple(x) for x in df.to_numpy()]
+    cols = ','.join(list(df.columns))
+    query = "INSERT INTO AggregationTransformation (%s) VALUES %%s" % (cols)
+    cursor = vercel_conn.cursor()
+    cursor.executemany(query, tuples)
+    vercel_conn.commit()
+    cursor.close()
+    # df.to_sql('AggregationTransformation', con=vercel_conn, index=False, if_exists='append')
 
 with dag:
     etl_task = PythonOperator(
