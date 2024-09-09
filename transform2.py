@@ -1,6 +1,5 @@
 from airflow import DAG
 from airflow.providers.microsoft.mssql.hooks.mssql import MsSqlHook
-from airflow.providers.google.suite.transfers.gcs_to_sheets import GCSToSheetsOperator
 from airflow.providers.google.suite.hooks.sheets import GSheetsHook
 from airflow.operators.python import PythonOperator
 from airflow.utils.dates import days_ago
