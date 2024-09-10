@@ -20,9 +20,12 @@ dag = DAG(
     schedule_interval=None
 )
 
-def objectid_to_str(doc):
+def objectid_and_timestamp_to_str(doc):
     if isinstance(doc, dict):
-        return {key: str(value) if isinstance(value, ObjectId) else value for key, value in doc.items()}
+        return {key: (
+            str(value) if isinstance(value, (ObjectId, Timestamp)) 
+            else value
+        ) for key, value in doc.items()}
     return doc
 
 def extract_mongo_data(**kwargs):
@@ -31,7 +34,7 @@ def extract_mongo_data(**kwargs):
     db = client['sample_mflix']
     collection = db['movies']
     data = list(collection.find())
-    mongo_data_cleaned = [objectid_to_str(doc) for doc in data]
+    mongo_data_cleaned = [objectid_and_timestamp_to_str(doc) for doc in data]
     kwargs['ti'].xcom_push(key='movies',value=mongo_data_cleaned)
 
 def transform_data(**kwargs):
