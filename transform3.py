@@ -6,6 +6,7 @@ from airflow.utils.dates import days_ago
 from airflow.providers.mongo.hooks.mongo import MongoHook
 import pandas as pd
 from datetime import datetime, timedelta
+from bson import ObjectId
 
 default_args = {
     'owner': 'airflow',
@@ -19,18 +20,24 @@ dag = DAG(
     schedule_interval=None
 )
 
+def objectid_to_str(doc):
+    if isinstance(doc, dict):
+        return {key: str(value) if isinstance(value, ObjectId) else value for key, value in doc.items()}
+    return doc
+
 def extract_mongo_data(**kwargs):
     mongo_hook = MongoHook(mongo_conn_id="mongo_atlas")
     client = mongo_hook.get_conn()
     db = client['sample_mflix']
     collection = db['movies']
     data = list(collection.find())
-    kwargs['ti'].xcom_push(key='movies',value=data)
+    mongo_data_cleaned = [objectid_to_str(doc) for doc in data]
+    kwargs['ti'].xcom_push(key='movies',value=mongo_data_cleaned)
 
 def transform_data(**kwargs):
     movies = kwargs['ti'].xcom_pull(key='movies')
     df = pd.json_normalize(movies)
-    df.drop(columns=['_id'],inplace=True)
+    # df.drop(columns=['_id'],inplace=True)
     kwargs['ti'].xcom_push(key='transformed_movies', value=df.to_dict(orient='records'))
 
 def save_to_csv(**kwargs):
