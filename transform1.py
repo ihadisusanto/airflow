@@ -10,7 +10,7 @@ import pandas as pd
 #DEFINE THE DAG
 
 dag = DAG(
-    'ETL_Transform_1',
+    'ETL_from_mongodb',
     default_args={
         'owner': 'airflow',
         'start_date': datetime(2024, 9, 9),
