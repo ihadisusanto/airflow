@@ -10,7 +10,7 @@ from googleapiclient.discovery import build
 
 default_args = {
     'owner': 'airflow',
-    'start_date': datetime(2024, 9, 12),
+    'start_date': datetime(2024, 9, 11),
     'retries': 1,
 }
 
