@@ -31,7 +31,7 @@ def extract_data_postgres(**kwargs):
 
     for item in data:
         if isinstance(item['tanggal'], date):
-            item['tanggal'] = datetime.combine(item['tanggal'], datetime.min.time())
+            item['tanggal'] = datetime.combine(item['tanggal'], datetime.min.time()) #Since mongo DB doesn't support date format, we change it to datetime
     cursor.close()
     pg_conn.close()
     kwargs['ti'].xcom_push(key='data_pertemuan_kuliah',value=data)
