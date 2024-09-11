@@ -59,7 +59,6 @@ FROM public.fact_perkuliahan_akademik as pa
 INNER JOIN public.dim_biodata_mahasiswa as bio ON pa.nim = bio.nim
 INNER JOIN public.dim_prodi as prodi ON pa.id_prodi = prodi.id_prodi
 WHERE 
-	bio.nim NOT IN ('222011294','221910851','222011788','222011255','222011407','222011732') AND
 	TRIM(prodi.kode_prodi) = '49502' 
 	AND pa.id_semester = '20231' 
 	AND pa.kelas ILIKE ANY (ARRAY['4SI%','4SD%'])
