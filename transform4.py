@@ -45,7 +45,7 @@ def load_to_mongo(**kwargs):
     db = client['sample_mflix'] #get the database name
     collection = db['pertemuan_kuliah']
     if data :
-        collection.insert_many(data)
+        collection.insert_many(data,upset=True) #insert if not found, update if found
 
 with dag:
     extract_data_task = PythonOperator(
