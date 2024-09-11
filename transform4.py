@@ -36,12 +36,12 @@ def extract_data_postgres(**kwargs):
 def load_to_mongo(**kwargs):
     # Connect using mongo hook
     mongo_hook = MongoHook(mongo_conn_id='mongo_atlas')
-    mongo_conn = mongo_hook.get_conn()
+    client = mongo_hook.get_conn()
     data = kwargs['ti'].xcom_pull(key='data_pertemuan_kuliah')
-    # mongo_conn['pertemuan_kuliah'].insert_many(data)
-    if data:
-        mongo_conn['pertemuan_kuliah'].insert_many(data)
-    mongo_conn.close()
+    db = client['sample_mflix'] #get the database name
+    collection = db['pertemuan_kuliah']
+    if data :
+        collection.insert_many(data)
 
 with dag:
     extract_data_task = PythonOperator(
