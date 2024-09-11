@@ -106,4 +106,4 @@ with dag:
         provide_context=True
     )
 
-    create_sheet_task >> extract_data_task >> load_data_task
+    extract_data_task >> load_data_task
