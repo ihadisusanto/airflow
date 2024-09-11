@@ -83,7 +83,7 @@ def load_data_to_sheet(**kwargs):
 
     values = [df.columns.tolist()] + df.values.tolist()
 
-    sheet_hook.insert_data(
+    sheet_hook.update_values(
         spreadsheet_id=sheet_id,
         range=sheet_range,
         values=values,
