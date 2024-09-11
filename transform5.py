@@ -59,9 +59,9 @@ FROM public.fact_perkuliahan_akademik as pa
 INNER JOIN public.dim_biodata_mahasiswa as bio ON pa.nim = bio.nim
 INNER JOIN public.dim_prodi as prodi ON pa.id_prodi = prodi.id_prodi
 WHERE 
-	TRIM(prodi.kode_prodi) = '49501' 
+	TRIM(prodi.kode_prodi) = '49502' 
 	AND pa.id_semester = '20231' 
-	AND pa.kelas ILIKE ANY (ARRAY['4SK%','4SE%'])
+	AND pa.kelas ILIKE ANY (ARRAY['4SI%','4SD%'])
 	AND pa.keputusan = 'Lanjut Ke Semester Genap'
 ORDER BY pa.ipk DESC
 """
@@ -78,7 +78,7 @@ def load_data_to_sheet(**kwargs):
 
     #Specify the spreadsheet ID and range
     sheet_id = '1IwXEaoUR5OdXc4z2lyBjr0xUYrLDZHb6uDYibgXsSto'
-    sheet_range = 'Peringkat-ST!A1'
+    sheet_range = 'Peringkat-ST'
 
     values = [df.columns.tolist()] + df.values.tolist()
 
@@ -92,10 +92,10 @@ def load_data_to_sheet(**kwargs):
 
 
 with dag:
-    create_sheet_task = PythonOperator(
-        task_id='create_sheet',
-        python_callable=create_new_sheet
-    )
+    # create_sheet_task = PythonOperator(
+    #     task_id='create_sheet',
+    #     python_callable=create_new_sheet
+    # )
     extract_data_task = PythonOperator(
         task_id='extract_data',
         python_callable=extract_data
@@ -106,4 +106,4 @@ with dag:
         provide_context=True
     )
 
-    create_sheet_task >> extract_data_task >> load_data_task
+    extract_data_task >> load_data_task
