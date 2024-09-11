@@ -92,10 +92,10 @@ def load_data_to_sheet(**kwargs):
 
 
 with dag:
-    create_sheet_task = PythonOperator(
-        task_id='create_sheet',
-        python_callable=create_new_sheet
-    )
+    # create_sheet_task = PythonOperator(
+    #     task_id='create_sheet',
+    #     python_callable=create_new_sheet
+    # )
     extract_data_task = PythonOperator(
         task_id='extract_data',
         python_callable=extract_data
