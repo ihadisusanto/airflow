@@ -42,7 +42,7 @@ def create_new_sheet():
         }]
     }
 
-    service.spreadsheet().batchUpdate(
+    service.spreadsheets().batchUpdate(
         spreadsheetId=spreadsheet_id,
         body=request_body
     ).execute()
