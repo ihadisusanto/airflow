@@ -10,7 +10,7 @@ from googleapiclient.discovery import build
 
 default_args = {
     'owner': 'airflow',
-    'start_date': datetime(2024, 9, 9),
+    'start_date': datetime(2024, 9, 12),
     'retries': 1,
 }
 
@@ -59,9 +59,9 @@ FROM public.fact_perkuliahan_akademik as pa
 INNER JOIN public.dim_biodata_mahasiswa as bio ON pa.nim = bio.nim
 INNER JOIN public.dim_prodi as prodi ON pa.id_prodi = prodi.id_prodi
 WHERE 
-	TRIM(prodi.kode_prodi) = '49502' 
+	TRIM(prodi.kode_prodi) = '49501' 
 	AND pa.id_semester = '20231' 
-	AND pa.kelas ILIKE ANY (ARRAY['4SI%','4SD%'])
+	AND pa.kelas ILIKE ANY (ARRAY['4SK%','4SE%'])
 	AND pa.keputusan = 'Lanjut Ke Semester Genap'
 ORDER BY pa.ipk DESC
 """
