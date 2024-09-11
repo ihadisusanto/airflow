@@ -78,7 +78,7 @@ def load_data_to_sheet(**kwargs):
 
     #Specify the spreadsheet ID and range
     sheet_id = '1IwXEaoUR5OdXc4z2lyBjr0xUYrLDZHb6uDYibgXsSto'
-    sheet_range = 'Peringkat-ST'
+    sheet_range = 'Peringkat-ST!A1'
 
     values = [df.columns.tolist()] + df.values.tolist()
 
