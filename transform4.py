@@ -35,7 +35,7 @@ def extract_data_postgres(**kwargs):
 
 def load_to_mongo(**kwargs):
     # Connect using mongo hook
-    mongo_hook = MongoHook(mongo_conn_id='local-mongo')
+    mongo_hook = MongoHook(mongo_conn_id='mongo_atlas')
     mongo_conn = mongo_hook.get_conn()
     data = kwargs['ti'].xcom_pull(key='data_pertemuan_kuliah')
     # mongo_conn['pertemuan_kuliah'].insert_many(data)
