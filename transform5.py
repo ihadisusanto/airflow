@@ -32,7 +32,7 @@ def create_new_sheet():
         "requests": [{
             "addSheet": {
                 "properties": {
-                    "title": "Peringkat-KS",  # Set the name for the new sheet
+                    "title": "Peringkat-ST",  # Set the name for the new sheet
                     "gridProperties": {
                         "rowCount": 1000,  # Default number of rows
                         "columnCount": 26  # Default number of columns (A-Z)
@@ -78,7 +78,7 @@ def load_data_to_sheet(**kwargs):
 
     #Specify the spreadsheet ID and range
     sheet_id = '1IwXEaoUR5OdXc4z2lyBjr0xUYrLDZHb6uDYibgXsSto'
-    sheet_range = 'Peringkat-KS!A1'
+    sheet_range = 'Peringkat-ST!A1'
 
     values = [df.columns.tolist()] + df.values.tolist()
 
@@ -92,10 +92,10 @@ def load_data_to_sheet(**kwargs):
 
 
 with dag:
-    # create_sheet_task = PythonOperator(
-    #     task_id='create_sheet',
-    #     python_callable=create_new_sheet
-    # )
+    create_sheet_task = PythonOperator(
+        task_id='create_sheet',
+        python_callable=create_new_sheet
+    )
     extract_data_task = PythonOperator(
         task_id='extract_data',
         python_callable=extract_data
@@ -106,4 +106,4 @@ with dag:
         provide_context=True
     )
 
-    extract_data_task >> load_data_task
+    create_sheet_task >> extract_data_task >> load_data_task
