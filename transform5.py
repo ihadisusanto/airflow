@@ -84,9 +84,9 @@ def load_data_to_sheet(**kwargs):
     values = [df.columns.tolist()] + df.values.tolist()
 
     sheet_hook.update_values(
-        spreadsheet_id=sheet_id,
-        range=sheet_range,
-        values=values,
+        sheet_id,
+        sheet_range,
+        values,
         value_input_option='RAW'  # Use raw values for the data
     )
 
