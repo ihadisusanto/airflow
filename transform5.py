@@ -70,7 +70,7 @@ ORDER BY pa.ipk DESC
 def extract_data(**kwargs):
     postgres_hook = PostgresHook(postgres_conn_id='local-postgres')
     conn = postgres_hook.get_conn()
-    df = pd.read_sql(extract_query, conn=conn)
+    df = pd.read_sql(extract_query,conn)
     kwargs['ti'].xcom_push(key='data', value=df)
 
 def load_data_to_sheet(**kwargs):
