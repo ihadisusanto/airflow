@@ -5,7 +5,7 @@ from airflow.hooks.postgres_hook import PostgresHook
 from airflow.operators.python_operator import PythonOperator
 from airflow.operators.postgres_operator import PostgresOperator
 from airflow.providers.mongo.hooks.mongo import MongoHook
-
+from datetime import datetime, date
 
 default_args = {
     'owner': 'airflow',
@@ -28,6 +28,10 @@ def extract_data_postgres(**kwargs):
     rows = cursor.fetchall()
     columns = [desc[0] for desc in cursor.description] #get the column names
     data = [dict(zip(columns,row)) for row in rows] # Convert rows to dictionary format
+
+    for item in data:
+        if isinstance(item['tanggal'], date):
+            item['tanggal'] = datetime.combine(item['tanggal'], datetime.min.time())
     cursor.close()
     pg_conn.close()
     kwargs['ti'].xcom_push(key='data_pertemuan_kuliah',value=data)
